@@ -49,20 +49,20 @@ jsonParse = {
 
 class Solver:
 
-    @staticmethod
-    def parse_object(parsed):
-        print(parsed)
-        flasks = []
-        for user_flask in parsed['flasks']:
-            flask = Flask([int(x) for x in user_flask], len(parsed['flasks'][0])) #TODO the first flask must be full
-            flasks.append(flask)
-        return State(flasks)
+    def parse_object(self, parsed):
+        if (not parsed['flasks'] or len(parsed['flasks']) < 1):
+            raise ValueError("No flasks given. format {'flasks':[...]}")
+        flask_length = len(parsed['flasks'][0])
+        if (flask_length < 1):
+            raise ValueError("First flask must be full")
 
-    @staticmethod
-    def solve(parsed):
-        init_state = Solver.parse_object(parsed)
+        return State([Flask([int(x) for x in f], flask_length) for f in parsed['flasks']])
+
+    # TODO greedy search
+    def solve(self, parsed):
+        init_state = self.parse_object(parsed)
     
-        queue_state = deque()
+        queue_state = deque() # init queue
         queue_state.append(init_state)
         visited = []
 
@@ -74,7 +74,7 @@ class Solver:
                 continue
 
             visited.append(current_state)
-            if current_state.isWinState:
+            if current_state.is_win_state:
                 solved_state = current_state
                 break
 
@@ -86,14 +86,15 @@ class Solver:
 
         res = []
         while solved_state != None:
-            com_pared = solved_state.compare(solved_state.parentState)
+            com_pared = solved_state.compare(solved_state.parent_state)
             if com_pared is None:
-                solved_state = solved_state.parentState
+                solved_state = solved_state.parent_state
                 continue
 
-            res.append(solved_state.toDict())
-            solved_state = solved_state.parentState
+            res.append(solved_state)
+            solved_state = solved_state.parent_state
         
+        print(parsed)
         for i in reversed(res):
             print(i)
         
@@ -102,4 +103,5 @@ class Solver:
 
 # originally from https://github.com/akcio/ball_sort_puzzle_solver
 if __name__ == "__main__":
-    Solver.solve(jsonParse)
+    solver = Solver()
+    solver.solve(json_parsed)
