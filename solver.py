@@ -158,14 +158,13 @@ BYMSNPBRSPOW
 BGAMYWYBNMBY
 YNGPGOAOOMNZ
 GMRAORNZWZSG""")
-    state = solver.parse_object(start_73)
+    # state = solver.parse_object(start_73)
     result = solver.solve(state)
     solver.pretty_print_solution(result)
 
 
 # originally from https://github.com/akcio/ball_sort_puzzle_solver
 if __name__ == "__main__":
-    #run()
+    run()
     # profiling:
-    import cProfile
-    cProfile.run('run()')
+    # import cProfile cProfile.run('run()')
