@@ -8,17 +8,15 @@ import heapq
 class Solver:
 
     def parse_object(self, parsed):
-        if (not parsed['flasks'] or len(parsed['flasks']) < 1):
+        if not parsed['flasks'] or len(parsed['flasks']) < 1:
             raise ValueError("No flasks given. format {'flasks':[...]}")
         flask_length = max([len(x) for x in parsed['flasks']])
-        if (flask_length < 1):
-            raise ValueError("Flasks must contain something")
-
-        # TODO validate that the correct number of colours and enough of each colour exists
+        
         return State([Flask([chr(x) for x in f], flask_length) for f in parsed['flasks']])
 
     def solve(self, parsed):
         init_state = self.parse_object(parsed)
+        init_state.validate()
     
         queue = [] #queue list
         heapq.heappush(queue, init_state)

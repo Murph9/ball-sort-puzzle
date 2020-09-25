@@ -101,3 +101,20 @@ class State:
     @staticmethod
     def unique_array(array):
         return [key for key, grp in itertools.groupby(array)]
+
+    def validate(self):
+        flask_length = self._flask_max_size
+        if flask_length < 1:
+            raise ValueError("Flasks must contain something")
+
+        flat_colours = [j for sub in self._flasks for j in sub.get_stack()]
+        if len(flat_colours) % flask_length != 0:
+            raise ValueError(
+                "Incorrect number of elements, must be a multiple of " + str(flask_length))
+
+        incorrect_colours = [x for x in set(flat_colours) if flat_colours.count(x) != flask_length]
+        if len(incorrect_colours) > 0:
+            raise ValueError("Colours need the correct (+"+str(flask_length)+") number: " + str(incorrect_colours))
+
+        if len(set(flat_colours)) + 2 != len(self._flasks):
+            raise ValueError("There must be 2 extra flasks")
