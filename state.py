@@ -7,8 +7,8 @@ class State:
         self.parent_state = parent_state
 
     @property
-    def flask_count(self):
-        return len(self._flasks)
+    def _flask_max_size(self):
+        return max([f.max for f in self._flasks])
 
     def as_dict(self):
         res = {'flasks': []}
@@ -17,7 +17,17 @@ class State:
         return str(res)
 
     def __str__(self):
-        return str(self.as_dict())
+        as_matrix = [f.get_stack() for f in self._flasks]
+        result = []
+        for i in reversed(range(self._flask_max_size)):
+            cur = []
+            for stack in as_matrix:
+                if len(stack) <= i:
+                    cur.append(' ')
+                else:
+                    cur.append(stack[i])
+            result.append('|'.join(cur))
+        return '\n'.join(result)
 
     @property
     def is_win_state(self):
@@ -33,7 +43,7 @@ class State:
         for flask_num in range(len(self._flasks)):
             if self._flasks[flask_num].is_empty:
                 continue
-            for other_flask_num in range(other.flask_count):
+            for other_flask_num in range(len(other._flasks)):
                 if other_flask_num not in visited and self._flasks[flask_num] == other._flasks[other_flask_num]:
                     visited.append(other_flask_num)
 

@@ -25,8 +25,7 @@ class Flask:
         return self.is_full and all([x == self._stack[0] for x in self._stack])
 
     def get_stack(self):
-        ret = copy.deepcopy(self._stack)
-        return ret
+        return copy.deepcopy(self._stack)
 
     def will_accept(self, item):
         if self.is_empty:

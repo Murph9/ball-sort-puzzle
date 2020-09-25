@@ -19,7 +19,7 @@ name = {
     'Red': ord('R'),
 }
 
-json_parsed = {
+start_basic = {
     'flasks': [
         [name[x] for x in ['Red', 'Pink', 'Red']],
         [name[x] for x in ['Pink', 'Red', 'Pink']],
@@ -28,7 +28,7 @@ json_parsed = {
     ]
 }
 
-jsonParse = {
+start_complex = {
     'flasks': [
         [name[x] for x in ['Red', 'Pink', 'DarkBlue', 'Green']],
         [name[x] for x in ['Turquoise', 'LightGreen', 'Orange', 'LightGreen']],
@@ -93,15 +93,16 @@ class Solver:
 
             res.append(solved_state)
             solved_state = solved_state.parent_state
-        
-        print(init_state)
-        for i in reversed(res):
-            print(i)
-        
-        return res
+        res.append(init_state) # add 'final state'
+        return reversed(res) # return it in step order
 
+    def pretty_print_solution(self, result):
+        for state in result:
+            print(state)
+            print('')
 
 # originally from https://github.com/akcio/ball_sort_puzzle_solver
 if __name__ == "__main__":
     solver = Solver()
-    solver.solve(json_parsed)
+    result = solver.solve(start_basic)
+    solver.pretty_print_solution(result)
