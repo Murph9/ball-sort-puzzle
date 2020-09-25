@@ -9,14 +9,15 @@ name = {
     'Green': ord('G'),
     'Turquoise': ord('T'),
     'Gray': ord('A'),
-    'Brown': ord('W'),
+    'Brown': ord('C'),
     'LightGreen': ord('L'),
     'Yellow': ord('Y'),
     'Violet': ord('V'),
-    'DarkBlue': ord('N'),
+    'Navy': ord('N'),
     'Orange': ord('O'),
     'Pink': ord('P'),
     'Red': ord('R'),
+    'White': ord('W')
 }
 
 start_basic = {
@@ -28,17 +29,27 @@ start_basic = {
     ]
 }
 
+start_basic2 = {
+    'flasks': [
+        [name[x] for x in ['Red', 'Pink', 'Red']],
+        [name[x] for x in ['Pink', 'Red', 'Pink']],
+        [name[x] for x in ['White', 'White', 'White']],
+        [],
+        []
+    ]
+}
+
 start_complex = {
     'flasks': [
-        [name[x] for x in ['Red', 'Pink', 'DarkBlue', 'Green']],
+        [name[x] for x in ['Red', 'Pink', 'Navy', 'Green']],
         [name[x] for x in ['Turquoise', 'LightGreen', 'Orange', 'LightGreen']],
         [name[x] for x in ['Pink', 'Brown', 'Turquoise', 'Gray']],
-        [name[x] for x in ['Brown', 'Green', 'DarkBlue', 'Violet']],
+        [name[x] for x in ['Brown', 'Green', 'Navy', 'Violet']],
         [name[x] for x in ['Turquoise', 'Red', 'Green', 'Brown']],
         [name[x] for x in ['Orange', 'Gray', 'Yellow', 'Blue']],
         [name[x] for x in ['Yellow', 'Yellow', 'Red', 'Violet']],
-        [name[x] for x in ['Turquoise', 'Violet', 'DarkBlue', 'Green']],
-        [name[x] for x in ['DarkBlue', 'LightGreen', 'LightGreen', 'Violet']],
+        [name[x] for x in ['Turquoise', 'Violet', 'Navy', 'Green']],
+        [name[x] for x in ['Navy', 'LightGreen', 'LightGreen', 'Violet']],
         [name[x] for x in ['Gray', 'Blue', 'Blue', 'Orange']],
         [name[x] for x in ['Gray', 'Red', 'Pink', 'Brown']],
         [name[x] for x in ['Orange', 'Yellow', 'Blue', 'Pink']],
@@ -104,5 +115,5 @@ class Solver:
 # originally from https://github.com/akcio/ball_sort_puzzle_solver
 if __name__ == "__main__":
     solver = Solver()
-    result = solver.solve(start_basic)
+    result = solver.solve(start_basic2)
     solver.pretty_print_solution(result)

@@ -23,7 +23,7 @@ class State:
             cur = []
             for stack in as_matrix:
                 if len(stack) <= i:
-                    cur.append(' ')
+                    cur.append('_')
                 else:
                     cur.append(stack[i])
             result.append('|'.join(cur))
