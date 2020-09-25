@@ -28,13 +28,13 @@ class Flask:
         ret = copy.deepcopy(self._stack)
         return ret
 
-    @property
-    def is_need_one_more(self):
-        return len(self._stack) == (self.max - 1) and all(x == self._stack[0] for x in self._stack)
-
-    def is_last_value_equal(self, item):
+    def will_accept(self, item):
+        if self.is_empty:
+            return True
+        if self.is_full:
+            return False
         return self._stack[-1] == item
-
+    
     def get_last_item_and_pop(self):
         item = self._stack[-1]
         self._stack = self._stack[0:-1]
@@ -49,4 +49,4 @@ class Flask:
     def __eq__(self, other):
         if not isinstance(other, Flask):
             return False
-        return len(self._stack) == len(other.get_stack()) and all([self._stack[x] == other.get_stack()[x] for x in range(len(self._stack))])
+        return self._stack == other._stack

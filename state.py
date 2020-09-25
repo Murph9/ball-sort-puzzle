@@ -49,24 +49,25 @@ class State:
 
     def get_next_states(self):
         out = []
-        #TODO remove range(len(xxx))
 
         # attempt to move any top piece to another flask
         for flask_num in range(len(self._flasks)):
             # current flask is empty or all the same color
-            if self._flasks[flask_num].is_empty or self._flasks[flask_num].is_one_colour or self._flasks[flask_num].is_need_one_more:
+            if self._flasks[flask_num].is_empty or self._flasks[flask_num].is_one_colour:
                 continue
 
             last_item = self._flasks[flask_num].get_last_item()
 
             for other_flask_num in range(len(self._flasks)):
-                if other_flask_num == flask_num or self._flasks[other_flask_num].is_full:
+                if other_flask_num == flask_num:
                     continue
-
-                if self._flasks[other_flask_num].is_empty or (not self._flasks[other_flask_num].is_full and self._flasks[other_flask_num].is_last_value_equal(last_item)):
+                if self._flasks[other_flask_num].will_accept(last_item):
                     new_flasks = copy.deepcopy(self._flasks)
-                    new_flasks[other_flask_num].add_item(new_flasks[flask_num].get_last_item_and_pop())
                     new_state = State(new_flasks, self)
+                    new_state._move_top_item_index(other_flask_num, flask_num)
                     out.append(new_state)
 
         return out
+
+    def _move_top_item_index(self, i, j):
+        self._flasks[i].add_item(self._flasks[j].get_last_item_and_pop())
