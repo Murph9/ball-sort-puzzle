@@ -133,5 +133,5 @@ start_73 = {
 # originally from https://github.com/akcio/ball_sort_puzzle_solver
 if __name__ == "__main__":
     solver = Solver()
-    result = solver.solve(start_73)
+    result = solver.solve(start_basic)
     solver.pretty_print_solution(result)

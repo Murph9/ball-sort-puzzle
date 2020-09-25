@@ -3,9 +3,10 @@ import copy
 import itertools
 
 class State:
-    def __init__(self, flasks, parent_state=None):
+    def __init__(self, flasks, parent_state=None, moved='Start'):
         self._flasks = flasks
         self.parent_state = parent_state
+        self.moved = moved
 
     @property
     def _flask_max_size(self):
@@ -28,7 +29,7 @@ class State:
                 else:
                     cur.append(stack[i])
             result.append('|'.join(cur))
-        return '\n'.join(result)
+        return str(self.moved) +'\n'+'\n'.join(result)
 
     @property
     def is_win_state(self):
@@ -74,7 +75,7 @@ class State:
                     continue
                 if self._flasks[other_flask_num].will_accept(last_item):
                     new_flasks = copy.deepcopy(self._flasks)
-                    new_state = State(new_flasks, self)
+                    new_state = State(new_flasks, self, '{0} from col {1} to {2}'.format(last_item, flask_num, other_flask_num))
                     new_state._move_top_item_index(other_flask_num, flask_num)
                     out.append(new_state)
 
