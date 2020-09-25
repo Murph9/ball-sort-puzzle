@@ -10,7 +10,7 @@ class Flask:
 
     @property
     def is_empty(self):
-        return len(self._stack) == 0
+        return not self._stack
 
     @property
     def length(self):
@@ -27,22 +27,20 @@ class Flask:
     def get_stack(self):
         return copy.deepcopy(self._stack)
 
-    def will_accept(self, item):
+    def accepts(self, item):
         if self.is_empty:
             return True
         if self.is_full:
             return False
         return self._stack[-1] == item
     
-    def get_last_item_and_pop(self):
-        item = self._stack[-1]
-        self._stack = self._stack[0:-1]
-        return item
+    def pop(self):
+        return self._stack.pop()
 
-    def get_last_item(self):
+    def peek(self):
         return self._stack[-1]
 
-    def add_item(self, item):
+    def add(self, item):
         self._stack.append(item)
 
     def __eq__(self, other):

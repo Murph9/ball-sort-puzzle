@@ -14,8 +14,8 @@ class State:
 
     def as_dict(self):
         res = {'flasks': []}
-        for flask_num in range(len(self._flasks)):
-            res['flasks'].append(self._flasks[flask_num].get_stack())
+        for flask in self._flasks:
+            res['flasks'].append(flask.get_stack())
         return str(res)
 
     def __str__(self):
@@ -42,22 +42,20 @@ class State:
             return False
 
         visited = []
-        for flask_num in range(len(self._flasks)):
-            if self._flasks[flask_num].is_empty:
+        for flask in self._flasks:
+            if flask.is_empty:
                 continue
-            for other_flask_num in range(len(other._flasks)):
-                if other_flask_num not in visited and self._flasks[flask_num] == other._flasks[other_flask_num]:
-                    visited.append(other_flask_num)
+            for other_flask in other._flasks:
+                if other_flask.is_empty:
+                    continue
+                if other_flask not in visited and flask == other_flask:
+                    visited.append(other_flask)
+                    break
 
         return len(self._flasks) == (sum([x.is_empty for x in self._flasks]) + len(visited))
 
     def compare(self, other):
-        if (not isinstance(other, State)):
-            return None
-        for flask_num in range(len(self._flasks)):
-            if not (self._flasks[flask_num] == other._flasks[flask_num]):
-                return flask_num
-        return None
+        return 0 if self.__eq__(other) else 1
 
     def get_next_states(self):
         out = []
@@ -68,12 +66,12 @@ class State:
             if self._flasks[flask_num].is_empty or self._flasks[flask_num].is_one_colour:
                 continue
 
-            last_item = self._flasks[flask_num].get_last_item()
+            last_item = self._flasks[flask_num].peek()
 
             for other_flask_num in range(len(self._flasks)):
                 if other_flask_num == flask_num:
                     continue
-                if self._flasks[other_flask_num].will_accept(last_item):
+                if self._flasks[other_flask_num].accepts(last_item):
                     new_flasks = copy.deepcopy(self._flasks)
                     new_state = State(new_flasks, self, '{0} from col {1} to {2}'.format(last_item, flask_num, other_flask_num))
                     new_state._move_top_item_index(other_flask_num, flask_num)
@@ -82,7 +80,7 @@ class State:
         return out
 
     def _move_top_item_index(self, i, j):
-        self._flasks[i].add_item(self._flasks[j].get_last_item_and_pop())
+        self._flasks[i].add(self._flasks[j].pop())
 
 
     def __lt__(self, other):

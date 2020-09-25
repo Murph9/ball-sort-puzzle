@@ -87,6 +87,8 @@ start_medium = {
         [ord(x) for x in ['Y', 'R', 'B', 'R']],
         [ord(x) for x in ['B', 'B', 'R', 'Y']],
         [ord(x) for x in ['Y', 'R', 'B', 'Y']],
+        [ord(x) for x in ['4', '4', '3', '3']],
+        [ord(x) for x in ['3', '3', '4', '4']],
         [],
         []
     ]
@@ -130,8 +132,13 @@ start_73 = {
 }
 
 
+def run():
+    solver = Solver()
+    result = solver.solve(start_medium)
+    solver.pretty_print_solution(result)
+
+
 # originally from https://github.com/akcio/ball_sort_puzzle_solver
 if __name__ == "__main__":
-    solver = Solver()
-    result = solver.solve(start_basic)
-    solver.pretty_print_solution(result)
+    run()
+    # profiling: import cProfile cProfile.run('run()')
