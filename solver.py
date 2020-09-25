@@ -40,7 +40,7 @@ class Solver:
     
         queue = [] #queue list
         heapq.heappush(queue, init_state)
-        visited = []
+        visited = set()
 
         solved_state = None
 
@@ -49,7 +49,7 @@ class Solver:
             if current_state in visited:
                 continue
 
-            visited.append(current_state)
+            visited.add(current_state)
             if current_state.is_win_state:
                 solved_state = current_state
                 break
@@ -58,7 +58,7 @@ class Solver:
             [heapq.heappush(queue, x) for x in new_states if x not in queue]
 
         if solved_state == None:
-            raise ValueError("Can't solve !!!!")
+            raise ValueError("Can't solve !!!!, tried: " + str(len(visited)))
 
         res = []
         while solved_state != None:
@@ -158,12 +158,14 @@ BYMSNPBRSPOW
 BGAMYWYBNMBY
 YNGPGOAOOMNZ
 GMRAORNZWZSG""")
-    # state = solver.parse_object(start_basic2)
+    state = solver.parse_object(start_73)
     result = solver.solve(state)
     solver.pretty_print_solution(result)
 
 
 # originally from https://github.com/akcio/ball_sort_puzzle_solver
 if __name__ == "__main__":
-    run()
-    # profiling: import cProfile cProfile.run('run()')
+    #run()
+    # profiling:
+    import cProfile
+    cProfile.run('run()')

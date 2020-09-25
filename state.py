@@ -3,14 +3,24 @@ import copy
 import itertools
 
 class State:
+    # immutable pls
     def __init__(self, flasks, parent_state=None, moved='Start'):
         self._flasks = flasks
         self.parent_state = parent_state
         self.moved = moved
+        self.max = max([f.max for f in self._flasks])
+
+        self._hash_me()
+
+    def _hash_me(self):
+        self._hash = hash(tuple(self._flasks))
 
     @property
     def _flask_max_size(self):
-        return max([f.max for f in self._flasks])
+        return self.max
+
+    def __hash__(self):
+        return self._hash
 
     def as_dict(self):
         res = {'flasks': []}
@@ -41,18 +51,7 @@ class State:
         if sum([x.is_empty for x in other._flasks]) != sum([x.is_empty for x in self._flasks]):
             return False
 
-        visited = []
-        for flask in self._flasks:
-            if flask.is_empty:
-                continue
-            for other_flask in other._flasks:
-                if other_flask.is_empty:
-                    continue
-                if other_flask not in visited and flask == other_flask:
-                    visited.append(other_flask)
-                    break
-
-        return len(self._flasks) == (sum([x.is_empty for x in self._flasks]) + len(visited))
+        return self._hash == other._hash 
 
     def compare(self, other):
         return 0 if self.__eq__(other) else 1
@@ -72,16 +71,15 @@ class State:
                 if other_flask_num == flask_num:
                     continue
                 if self._flasks[other_flask_num].accepts(last_item):
-                    new_flasks = copy.deepcopy(self._flasks)
-                    new_state = State(new_flasks, self, '{0} from col {1} to {2}'.format(last_item, flask_num, other_flask_num))
-                    new_state._move_top_item_index(other_flask_num, flask_num)
+                    new_state = self._create_from_move_index(last_item, flask_num, other_flask_num)
                     out.append(new_state)
 
         return out
 
-    def _move_top_item_index(self, i, j):
-        self._flasks[i].add(self._flasks[j].pop())
-
+    def _create_from_move_index(self, last_item, i, j):
+        new_flasks = copy.deepcopy(self._flasks)
+        new_flasks[j].add(new_flasks[i].pop())
+        return State(new_flasks, self, '{0} from col {1} to {2}'.format(last_item, i, j))
 
     def __lt__(self, other):
         return self._value() < other._value()
