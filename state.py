@@ -1,5 +1,6 @@
 from flask import Flask
 import copy
+import itertools
 
 class State:
     def __init__(self, flasks, parent_state=None):
@@ -81,3 +82,23 @@ class State:
 
     def _move_top_item_index(self, i, j):
         self._flasks[i].add_item(self._flasks[j].get_last_item_and_pop())
+
+
+    def __lt__(self, other):
+        return self._value() < other._value()
+
+    # heuristic, but im just guessing whats good
+    def _value(self):
+        total = 0
+        for flask in self._flasks:
+            uniq_array = State.unique_array(flask.get_stack())
+            total += len(uniq_array) # ungrouped colors give a score
+
+        # reduce value 
+        total = total + sum([-1 if x.is_empty else 0 for x in self._flasks])
+
+        return total
+    
+    @staticmethod
+    def unique_array(array):
+        return [key for key, grp in itertools.groupby(array)]

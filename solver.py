@@ -3,84 +3,31 @@ from state import State
 from flask import Flask
 import json
 import copy
-
-name = {
-    'Blue': ord('B'),
-    'Green': ord('G'),
-    'Turquoise': ord('T'),
-    'Gray': ord('A'),
-    'Brown': ord('C'),
-    'LightGreen': ord('L'),
-    'Yellow': ord('Y'),
-    'Violet': ord('V'),
-    'Navy': ord('N'),
-    'Orange': ord('O'),
-    'Pink': ord('P'),
-    'Red': ord('R'),
-    'White': ord('W')
-}
-
-start_basic = {
-    'flasks': [
-        [name[x] for x in ['Red', 'Pink', 'Red']],
-        [name[x] for x in ['Pink', 'Red', 'Pink']],
-        [],
-        []
-    ]
-}
-
-start_basic2 = {
-    'flasks': [
-        [name[x] for x in ['Red', 'Pink', 'Red']],
-        [name[x] for x in ['Pink', 'Red', 'Pink']],
-        [name[x] for x in ['White', 'White', 'White']],
-        [],
-        []
-    ]
-}
-
-start_complex = {
-    'flasks': [
-        [name[x] for x in ['Red', 'Pink', 'Navy', 'Green']],
-        [name[x] for x in ['Turquoise', 'LightGreen', 'Orange', 'LightGreen']],
-        [name[x] for x in ['Pink', 'Brown', 'Turquoise', 'Gray']],
-        [name[x] for x in ['Brown', 'Green', 'Navy', 'Violet']],
-        [name[x] for x in ['Turquoise', 'Red', 'Green', 'Brown']],
-        [name[x] for x in ['Orange', 'Gray', 'Yellow', 'Blue']],
-        [name[x] for x in ['Yellow', 'Yellow', 'Red', 'Violet']],
-        [name[x] for x in ['Turquoise', 'Violet', 'Navy', 'Green']],
-        [name[x] for x in ['Navy', 'LightGreen', 'LightGreen', 'Violet']],
-        [name[x] for x in ['Gray', 'Blue', 'Blue', 'Orange']],
-        [name[x] for x in ['Gray', 'Red', 'Pink', 'Brown']],
-        [name[x] for x in ['Orange', 'Yellow', 'Blue', 'Pink']],
-        [],
-        []
-    ]
-}
+import heapq
 
 class Solver:
 
     def parse_object(self, parsed):
         if (not parsed['flasks'] or len(parsed['flasks']) < 1):
             raise ValueError("No flasks given. format {'flasks':[...]}")
-        flask_length = len(parsed['flasks'][0])
+        flask_length = max([len(x) for x in parsed['flasks']])
         if (flask_length < 1):
-            raise ValueError("First flask must be full")
+            raise ValueError("Flasks must contain something")
 
+        # TODO validate that the correct number of colours and enough of each colour exists
         return State([Flask([chr(x) for x in f], flask_length) for f in parsed['flasks']])
 
-    # TODO greedy search
     def solve(self, parsed):
         init_state = self.parse_object(parsed)
     
-        queue_state = deque() # init queue
-        queue_state.append(init_state)
+        queue = [] #queue list
+        heapq.heappush(queue, init_state)
         visited = []
 
         solved_state = None
 
-        while len(queue_state) != 0:
-            current_state = queue_state.pop()
+        while len(queue) != 0:
+            current_state = heapq.heappop(queue)
             if current_state in visited:
                 continue
 
@@ -90,10 +37,10 @@ class Solver:
                 break
 
             new_states = current_state.get_next_states()
-            [queue_state.append(x) for x in new_states if x not in queue_state]
+            [heapq.heappush(queue, x) for x in new_states if x not in queue]
 
         if solved_state == None:
-            print("Can't solve")
+            raise ValueError("Can't solve !!!!")
 
         res = []
         while solved_state != None:
@@ -105,6 +52,9 @@ class Solver:
             res.append(solved_state)
             solved_state = solved_state.parent_state
         res.append(init_state) # add 'final state'
+
+        print("Solved. In " + str(len(res)) + " steps. Search space: " + str(len(visited)))
+
         return reversed(res) # return it in step order
 
     def pretty_print_solution(self, result):
@@ -112,8 +62,76 @@ class Solver:
             print(state)
             print('')
 
+########################
+start_basic = {
+    'flasks': [
+        [ord(x) for x in ['R', 'P', 'R']],
+        [ord(x) for x in ['P', 'R', 'P']],
+        [],
+        []
+    ]
+}
+
+start_basic2 = {
+    'flasks': [
+        [ord(x) for x in ['R', 'P', 'R']],
+        [ord(x) for x in ['P', 'R', 'P']],
+        [ord(x) for x in ['W', 'W', 'W']],
+        [],
+        []
+    ]
+}
+
+start_medium = {
+    'flasks': [
+        [ord(x) for x in ['Y', 'R', 'B', 'R']],
+        [ord(x) for x in ['B', 'B', 'R', 'Y']],
+        [ord(x) for x in ['Y', 'R', 'B', 'Y']],
+        [],
+        []
+    ]
+}
+
+start_complex = {
+    'flasks': [
+        [ord(x) for x in ['R', 'P', 'N', 'G']],
+        [ord(x) for x in ['T', 'L', 'O', 'L']],
+        [ord(x) for x in ['P', 'B', 'T', 'A']],
+        [ord(x) for x in ['B', 'G', 'N', 'V']],
+        [ord(x) for x in ['T', 'R', 'G', 'B']],
+        [ord(x) for x in ['O', 'A', 'Y', 'C']],
+        [ord(x) for x in ['Y', 'Y', 'R', 'V']],
+        [ord(x) for x in ['T', 'V', 'N', 'G']],
+        [ord(x) for x in ['N', 'L', 'L', 'V']],
+        [ord(x) for x in ['A', 'C', 'C', 'O']],
+        [ord(x) for x in ['A', 'R', 'P', 'B']],
+        [ord(x) for x in ['O', 'Y', 'C', 'P']],
+        [],
+        []
+    ]
+}
+
+start_73 = {
+    'flasks': [
+        [ord(x) for x in ['9', '0', '7', '1']],
+        [ord(x) for x in ['A', '9', '8', '1']],
+        [ord(x) for x in ['6', '0', '5', '2']],
+        [ord(x) for x in ['6', '5', 'A', '1']],
+        [ord(x) for x in ['0', '4', '3', '3']],
+        [ord(x) for x in ['8', '8', '5', '4']],
+        [ord(x) for x in ['3', '3', '6', '4']],
+        [ord(x) for x in ['0', '9', '2', '5']],
+        [ord(x) for x in ['1', '2', 'A', '6']],
+        [ord(x) for x in ['A', '8', '7', '4']],
+        [ord(x) for x in ['9', '7', '2', '7']],
+        [],
+        []
+    ]
+}
+
+
 # originally from https://github.com/akcio/ball_sort_puzzle_solver
 if __name__ == "__main__":
     solver = Solver()
-    result = solver.solve(start_basic2)
+    result = solver.solve(start_73)
     solver.pretty_print_solution(result)
