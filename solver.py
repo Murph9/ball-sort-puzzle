@@ -5,18 +5,18 @@ import json
 import copy
 
 name = {
-    'Blue': 1,
-    'Green': 2,
-    'Turquoise': 3,
-    'Gray': 4,
-    'Brown': 5,
-    'LightGreen': 6,
-    'Yellow': 7,
-    'Violet': 8,
-    'DarkBlue': 9,
-    'Orange': 10,
-    'Pink': 11,
-    'Red': 12,
+    'Blue': ord('B'),
+    'Green': ord('G'),
+    'Turquoise': ord('T'),
+    'Gray': ord('A'),
+    'Brown': ord('W'),
+    'LightGreen': ord('L'),
+    'Yellow': ord('Y'),
+    'Violet': ord('V'),
+    'DarkBlue': ord('N'),
+    'Orange': ord('O'),
+    'Pink': ord('P'),
+    'Red': ord('R'),
 }
 
 json_parsed = {
@@ -56,7 +56,7 @@ class Solver:
         if (flask_length < 1):
             raise ValueError("First flask must be full")
 
-        return State([Flask([int(x) for x in f], flask_length) for f in parsed['flasks']])
+        return State([Flask([chr(x) for x in f], flask_length) for f in parsed['flasks']])
 
     # TODO greedy search
     def solve(self, parsed):
@@ -94,7 +94,7 @@ class Solver:
             res.append(solved_state)
             solved_state = solved_state.parent_state
         
-        print(parsed)
+        print(init_state)
         for i in reversed(res):
             print(i)
         
