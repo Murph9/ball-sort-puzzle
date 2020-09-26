@@ -1,5 +1,6 @@
 import copy
 
+
 class Flask:
     def __init__(self, stack, max_count):
         self.max = max_count
@@ -33,7 +34,7 @@ class Flask:
         if self.is_full:
             return False
         return self._stack[-1] == item
-    
+
     def pop(self):
         ret = self._stack[-1]
         self._stack = tuple(self._stack[:-1])
