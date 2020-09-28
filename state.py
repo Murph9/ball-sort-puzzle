@@ -51,10 +51,7 @@ class State:
     def __eq__(self, other):
         if not isinstance(other, State):
             return False
-        if sum([x.is_empty for x in other._flasks]) != sum([x.is_empty for x in self._flasks]):
-            return False
-
-        return self._hash == other._hash 
+        return self._hash == other._hash
 
     def compare(self, other):
         return 0 if self.__eq__(other) else 1
