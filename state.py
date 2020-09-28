@@ -82,10 +82,10 @@ class State:
         return State(new_flasks, self, '{0} from col {1} to {2}'.format(last_item, i, j))
 
     def __lt__(self, other):
-        return self._value() < other._value()
+        return self.heuristic() < other.heuristic()
 
-    # heuristic, but im just guessing whats good
-    def _value(self):
+    # im just guessing whats good
+    def heuristic(self):
         total = 0
         for flask in self._flasks:
             uniq_array = State.unique_array(flask.get_stack())

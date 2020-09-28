@@ -30,13 +30,14 @@ class Solver:
     def solve(self, state):
         init_state = state
         init_state.validate()
-    
+        print("Validated input correctly, searching for a solution.")
+
         queue = [] #queue list
         heapq.heappush(queue, init_state)
         visited = set()
 
         solved_state = None
-
+        i = 0
         while len(queue) != 0:
             current_state = heapq.heappop(queue)
             if current_state in visited:
@@ -47,8 +48,15 @@ class Solver:
                 solved_state = current_state
                 break
 
+            i+=1
+            if i % 20 == 0:
+                print(f"Current weight (goal is 0): {current_state.heuristic()}")
+
             new_states = current_state.get_next_states()
             [heapq.heappush(queue, x) for x in new_states if x not in queue]
+
+
+        print("Search finished")
 
         if solved_state == None:
             raise ValueError("Can't solve !!!!, tried: " + str(len(visited)))
@@ -115,16 +123,23 @@ YNGPGOAOOMNZ
 GMRAORNZWZSG
 """
 
+start_136 = """
+bgg1rrdwpooa
+odbwgydwbayp
+syp1z1ar1gas
+ybrszzsdowpz
+"""
 
 def run():
     solver = Solver()
-    state = solver.parse_string(start_371)
+    state = solver.parse_string(start_136)
     result = solver.solve(state)
     solver.pretty_print_solution(result)
 
 
 # originally from https://github.com/akcio/ball_sort_puzzle_solver
 if __name__ == "__main__":
-    run()
+    # run()
     # profiling:
-    # import cProfile cProfile.run('run()')
+    import cProfile
+    cProfile.run('run()')
