@@ -7,13 +7,6 @@ import heapq
 
 class Solver:
 
-    def parse_object(self, parsed):
-        if not parsed['flasks'] or len(parsed['flasks']) < 1:
-            raise ValueError("No flasks given. format {'flasks':[...]}")
-        flask_length = max([len(x) for x in parsed['flasks']])
-        
-        return State([Flask([x for x in f], flask_length) for f in parsed['flasks']])
-
     def parse_string(self, string):
         flasks = []
         rows = reversed(string.splitlines())
@@ -81,84 +74,51 @@ class Solver:
             print('')
 
 ########################
-start_basic = {
-    'flasks': [
-        [x for x in ['R', 'P', 'R']],
-        [x for x in ['P', 'R', 'P']],
-        [],
-        []
-    ]
-}
+start_basic = """
+RP
+PR
+RP
+"""
 
-start_basic2 = {
-    'flasks': [
-        [x for x in ['R', 'P', 'R']],
-        [x for x in ['P', 'R', 'P']],
-        [x for x in ['W', 'W', 'W']],
-        [],
-        []
-    ]
-}
+start_basic2 = """
+RPW
+PRW
+RPW
+"""
 
-start_medium = {
-    'flasks': [
-        [x for x in ['Y', 'R', 'B', 'R']],
-        [x for x in ['B', 'B', 'R', 'Y']],
-        [x for x in ['Y', 'R', 'B', 'Y']],
-        [x for x in ['4', '4', '3', '3']],
-        [x for x in ['3', '3', '4', '4']],
-        [],
-        []
-    ]
-}
+start_medium = """
+RYY34
+BRB34
+RBR43
+YBY43
+"""
 
-start_complex = {
-    'flasks': [
-        [x for x in ['R', 'P', 'N', 'G']],
-        [x for x in ['T', 'L', 'O', 'L']],
-        [x for x in ['P', 'B', 'T', 'A']],
-        [x for x in ['B', 'G', 'N', 'V']],
-        [x for x in ['T', 'R', 'G', 'B']],
-        [x for x in ['O', 'A', 'Y', 'C']],
-        [x for x in ['Y', 'Y', 'R', 'V']],
-        [x for x in ['T', 'V', 'N', 'G']],
-        [x for x in ['N', 'L', 'L', 'V']],
-        [x for x in ['A', 'C', 'C', 'O']],
-        [x for x in ['A', 'R', 'P', 'B']],
-        [x for x in ['O', 'Y', 'C', 'P']],
-        [],
-        []
-    ]
-}
+start_complex = """
+GLAVBCVGVOBP
+NOTNGYRNLCPC
+PLBGRAYVLCRY
+RTPBTOYTNAAO
+"""
 
-start_73 = {
-    'flasks': [
-        [x for x in ['9', '0', '7', '1']],
-        [x for x in ['A', '9', '8', '1']],
-        [x for x in ['6', '0', '5', '2']],
-        [x for x in ['6', '5', 'A', '1']],
-        [x for x in ['0', '4', '3', '3']],
-        [x for x in ['8', '8', '5', '4']],
-        [x for x in ['3', '3', '6', '4']],
-        [x for x in ['0', '9', '2', '5']],
-        [x for x in ['1', '2', 'A', '6']],
-        [x for x in ['A', '8', '7', '4']],
-        [x for x in ['9', '7', '2', '7']],
-        [],
-        []
-    ]
-}
+start_73 = """
+11213445647
+785A3562A72
+09054839287
+9A6608301A9
+""" 
 
-
-def run():
-    solver = Solver()
-    state = solver.parse_string("""
+start_371 = """
 PPZAZRWSWRSA
 BYMSNPBRSPOW
 BGAMYWYBNMBY
 YNGPGOAOOMNZ
-GMRAORNZWZSG""")
-    # state = solver.parse_object(start_73)
+GMRAORNZWZSG
+"""
+
+
+def run():
+    solver = Solver()
+    state = solver.parse_string(start_371)
     result = solver.solve(state)
     solver.pretty_print_solution(result)
 
