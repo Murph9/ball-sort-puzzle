@@ -132,14 +132,13 @@ ybrszzsdowpz
 
 def run():
     solver = Solver()
-    state = solver.parse_string(start_136)
+    state = solver.parse_string(start_371)
     result = solver.solve(state)
     solver.pretty_print_solution(result)
 
 
 # originally from https://github.com/akcio/ball_sort_puzzle_solver
 if __name__ == "__main__":
-    # run()
+    run()
     # profiling:
-    import cProfile
-    cProfile.run('run()')
+    # import cProfile cProfile.run('run()')

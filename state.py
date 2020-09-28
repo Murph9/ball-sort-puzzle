@@ -11,6 +11,7 @@ class State:
         self.max = max([f.max for f in self._flasks])
 
         self._hash_me()
+        self._set_heuristic()
 
     def _hash_me(self):
         self._hash = hash(tuple(self._flasks))
@@ -84,8 +85,11 @@ class State:
     def __lt__(self, other):
         return self.heuristic() < other.heuristic()
 
-    # im just guessing whats good
     def heuristic(self):
+        return self._heuristic
+
+    # im just guessing whats good
+    def _set_heuristic(self):
         total = 0
         for flask in self._flasks:
             uniq_array = State.unique_array(flask.get_stack())
@@ -93,8 +97,7 @@ class State:
 
         # reduce value 
         total = total + sum([-1 if x.is_empty else 0 for x in self._flasks])
-
-        return total
+        self._heuristic = total
     
     @staticmethod
     def unique_array(array):
