@@ -50,7 +50,7 @@ class Solver:
 
             i+=1
             if i % 20 == 0:
-                print(f"Current weight (goal is 0): {current_state.heuristic()}")
+                print(f"Minimum moves left: {current_state.heuristic() - current_state.flask_count()}")
 
             new_states = current_state.get_next_states()
             [heapq.heappush(queue, x) for x in new_states if x not in queue]

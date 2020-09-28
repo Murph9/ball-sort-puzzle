@@ -15,6 +15,9 @@ class State:
     def _hash_me(self):
         self._hash = hash(tuple(self._flasks))
 
+    def flask_count(self):
+        return len(self._flasks)
+
     @property
     def _flask_max_size(self):
         return self.max
